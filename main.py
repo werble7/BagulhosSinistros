@@ -1,3 +1,23 @@
+def dekey(processo):
+
+    if "dekey" in processo[0]:
+        lista = processo[0][8:].split()
+        for i in range(int(lista[0])):
+            if lista[1] < lista[2]:
+                lista.append(lista[1])
+                lista.pop(1)
+            else:
+                lista.append(lista[2])
+                lista.pop(2)
+
+        for i in range(len(lista)):
+            if i != 0:
+                print(lista[i], end="")
+
+        print()
+        processo.pop(0)
+
+
 if __name__ == '__main__':
 
     filaProcesso = []
@@ -27,8 +47,8 @@ if __name__ == '__main__':
                             filaProcesso.append(comando)
 
         elif entrada == "go":
-            continue
-        elif entrada == "stop":
-            break
+            dekey(filaProcesso)
 
-    print(filaProcesso)
+        elif entrada == "stop":
+            print(f"{len(filaProcesso)} processo(s) órfão(s).")
+            break
