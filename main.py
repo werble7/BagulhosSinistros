@@ -25,7 +25,7 @@ def dekey(processo):
 
 def scramble(processo):
     palavra = ''
-    novaFrase = []
+    novaFrase = ''
     final = True
     frase = processo[0].split()
 
@@ -35,9 +35,9 @@ def scramble(processo):
         else:
             if palavra != '':
                 if final:
-                    novaFrase.append(palavra)
+                    novaFrase += palavra
                 else:
-                    novaFrase.insert(0, palavra)
+                    novaFrase = palavra + novaFrase
             if item == "(":
                 final = False
             else:
@@ -46,9 +46,9 @@ def scramble(processo):
 
     if palavra != '':
         if final:
-            novaFrase.append(palavra)
+            novaFrase += palavra
         else:
-            novaFrase.insert(0, palavra)
+            novaFrase = palavra + novaFrase
 
     processo.pop(0)
 
@@ -88,9 +88,7 @@ if __name__ == '__main__':
                 if 'dekey' in filaProcesso[0]:
                     dekey(filaProcesso)
                 elif 'scramble' in filaProcesso[0]:
-                    for item in scramble(filaProcesso):
-                        print(item, end='')
-                    print()
+                    print(scramble(filaProcesso))
 
         elif entrada == "stop":
             print(f"{len(filaProcesso)} processo(s) órfão(s).")
