@@ -2,7 +2,12 @@ def dekey(processo):
 
     if 'dekey' in processo[0]:
         lista = processo[0][8:].split()
-        for i in range(int(lista[0])):
+        x = int(lista[0])
+        if x > len(lista):
+            x = x % (len(lista) - 2)
+            if x == 0:
+                x = len(lista) - 2
+        for i in range(x):
             if lista[1] < lista[2]:
                 lista.append(lista[1])
                 lista.pop(1)
