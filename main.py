@@ -1,3 +1,64 @@
+class Processo:
+    def __init__(self, comando, prioridade):
+        self.comando = comando
+        self.prioridade = prioridade
+        self.prox = None
+
+    def __str__(self):
+        return self.comando
+
+
+class FilaDeProcessos:
+    def __init__(self):
+        self.primeiro = None
+        self.ultimo = None
+
+    def addProcesso(self, processo):
+        if self.primeiro is None:
+
+            self.primeiro = processo
+            self.ultimo = processo
+
+        elif self.primeiro == self.ultimo:
+
+            if self.primeiro.prioridade <= processo.prioridade:
+                self.ultimo.prox = processo
+                self.ultimo = processo
+
+            else:
+                processo.prox = self.primeiro
+                self.primeiro = processo
+
+        elif processo.prioridade == 5:
+
+            self.ultimo.prox = processo
+            self.ultimo = processo
+
+        else:
+
+            anterior = None
+            atualAdd = self.primeiro
+            achado = False
+
+            while True:
+                if atualAdd.prioridade == processo.prioridade + 1:
+                    processo.prox = atualAdd
+                    if anterior is not None:
+                        anterior.prox = processo
+                    else:
+                        self.primeiro = processo
+                    break
+
+                anterior = atualAdd
+                if atualAdd.prox is not None:
+                    atualAdd = atualAdd.prox
+
+                else:
+                    self.ultimo.prox = processo
+                    self.ultimo = processo
+                    break
+
+
 def dekey(processo):
 
     if 'dekey' in processo[0]:
@@ -57,7 +118,7 @@ def scramble(processo):
 
 if __name__ == '__main__':
 
-    filaProcesso = []
+    fila = FilaDeProcessos()
 
     while True:
         entrada = input()
@@ -70,19 +131,23 @@ if __name__ == '__main__':
 
                 if 'dekey' in comando or 'scramble' in comando:
 
-                    pronto = False
+                    temp = Processo(comando, int(comando[0]))
+                    fila.addProcesso(temp)
 
-                    if len(filaProcesso) == 0:
-                        filaProcesso.append(comando)
-                    else:
-                        for j in range(len(filaProcesso)):
-                            if int(comando[0]) < int(str(filaProcesso[j])[0]):
-                                filaProcesso.insert(j, comando)
-                                pronto = True
-                                break
-                        if not pronto:
-                            filaProcesso.append(comando)
+        elif entrada == "go":
+            atual = fila.primeiro
+            while True:
+                print(atual)
+                if atual.prox is not None:
+                    atual = atual.prox
+                else:
+                    print("fim")
+                    break
 
+        elif entrada == "stop":
+            break
+
+        '''
         elif entrada == "go":
             if len(filaProcesso) != 0:
                 if 'dekey' in filaProcesso[0]:
@@ -93,3 +158,4 @@ if __name__ == '__main__':
         elif entrada == "stop":
             print(f"{len(filaProcesso)} processo(s) órfão(s).")
             break
+        '''
