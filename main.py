@@ -37,32 +37,53 @@ class FilaDeProcessos:
         else:
 
             anterior = None
-            atualAdd = self.primeiro
+            atual = self.primeiro
             achado = False
 
             while True:
-                if atualAdd.prioridade == processo.prioridade + 1:
-                    processo.prox = atualAdd
+                if atual.prioridade == processo.prioridade + 1:
+                    processo.prox = atual
                     if anterior is not None:
                         anterior.prox = processo
                     else:
                         self.primeiro = processo
                     break
 
-                anterior = atualAdd
-                if atualAdd.prox is not None:
-                    atualAdd = atualAdd.prox
+                anterior = atual
+                if atual.prox is not None:
+                    atual = atual.prox
 
                 else:
                     self.ultimo.prox = processo
                     self.ultimo = processo
                     break
 
+    def removeProcesso(self):
+        if self.primeiro is not None:
+            if self.primeiro.prox is not None:
+                self.primeiro = self.primeiro.prox
+            else:
+                self.primeiro = None
 
-def dekey(processo):
+    def count(self):
+        cont = 0
+        atual = self.primeiro
+        if atual is not None:
+            while True:
+                cont += 1
+                if atual.prox is not None:
+                    atual = atual.prox
+                else:
+                    break
+        return cont
 
-    if 'dekey' in processo[0]:
-        lista = processo[0][8:].split()
+
+def dekey(fila):
+
+    processo = fila.primeiro.comando
+
+    if 'dekey' in processo:
+        lista = processo[8:].split()
         x = int(lista[0])
         if x > len(lista):
             x = x % (len(lista) - 2)
@@ -81,14 +102,14 @@ def dekey(processo):
                 print(lista[i], end="")
 
         print()
-        processo.pop(0)
+        fila.removeProcesso()
 
 
-def scramble(processo):
+def scramble(fila):
     palavra = ''
     novaFrase = ''
     final = True
-    frase = processo[0].split()
+    frase = fila.primeiro.comando.split()
 
     for item in frase[2]:
         if item not in "()":
@@ -111,9 +132,9 @@ def scramble(processo):
         else:
             novaFrase = palavra + novaFrase
 
-    processo.pop(0)
+    fila.removeProcesso()
 
-    return novaFrase
+    print(novaFrase)
 
 
 if __name__ == '__main__':
@@ -128,34 +149,20 @@ if __name__ == '__main__':
             for i in range(int(entrada[8:])):
 
                 comando = input()
+                partes = comando.split()
 
-                if 'dekey' in comando or 'scramble' in comando:
+                if ('dekey' in partes[1] or 'scramble' in partes[1]) and 0 <= int(partes[0]) <= 5:
 
                     temp = Processo(comando, int(comando[0]))
                     fila.addProcesso(temp)
 
         elif entrada == "go":
-            atual = fila.primeiro
-            while True:
-                print(atual)
-                if atual.prox is not None:
-                    atual = atual.prox
-                else:
-                    print("fim")
-                    break
+            if fila.primeiro is not None:
+                if 'scramble' in fila.primeiro.comando:
+                    scramble(fila)
+                elif 'dekey' in fila.primeiro.comando:
+                    dekey(fila)
 
         elif entrada == "stop":
+            print(f"{fila.count()} processo(s) órfão(s).")
             break
-
-        '''
-        elif entrada == "go":
-            if len(filaProcesso) != 0:
-                if 'dekey' in filaProcesso[0]:
-                    dekey(filaProcesso)
-                elif 'scramble' in filaProcesso[0]:
-                    print(scramble(filaProcesso))
-
-        elif entrada == "stop":
-            print(f"{len(filaProcesso)} processo(s) órfão(s).")
-            break
-        '''
