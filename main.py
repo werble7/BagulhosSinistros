@@ -12,6 +12,7 @@ class FilaDeProcessos:
     def __init__(self):
         self.primeiro = None
         self.ultimo = None
+        self.tamanho = 0
 
     def addProcesso(self, processo):
         if self.primeiro is None:
@@ -29,7 +30,7 @@ class FilaDeProcessos:
                 processo.prox = self.primeiro
                 self.primeiro = processo
 
-        elif processo.prioridade == 5:
+        elif self.ultimo.prioridade <= processo.prioridade:
 
             self.ultimo.prox = processo
             self.ultimo = processo
@@ -58,24 +59,18 @@ class FilaDeProcessos:
                     self.ultimo = processo
                     break
 
+        self.tamanho += 1
+
     def removeProcesso(self):
         if self.primeiro is not None:
             if self.primeiro.prox is not None:
                 self.primeiro = self.primeiro.prox
             else:
                 self.primeiro = None
+            self.tamanho -= 1
 
     def count(self):
-        cont = 0
-        atual = self.primeiro
-        if atual is not None:
-            while True:
-                cont += 1
-                if atual.prox is not None:
-                    atual = atual.prox
-                else:
-                    break
-        return cont
+        return self.tamanho
 
 
 def dekey(fila):
