@@ -144,12 +144,14 @@ if __name__ == '__main__':
             for i in range(int(entrada[8:])):
 
                 comando = input()
-                partes = comando.split()
 
-                if ('dekey' in partes[1] or 'scramble' in partes[1]) and 0 <= int(partes[0]) <= 5:
+                if comando != 'go' and comando != 'stop':
+                    partes = comando.split()
 
-                    temp = Processo(comando, int(comando[0]))
-                    fila.addProcesso(temp)
+                    if ('dekey' in partes[1] or 'scramble' in partes[1]) and 0 <= int(partes[0]) <= 5:
+
+                        temp = Processo(comando, int(comando[0]))
+                        fila.addProcesso(temp)
 
         elif entrada == "go":
             if fila.primeiro is not None:
